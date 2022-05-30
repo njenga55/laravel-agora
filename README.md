@@ -11,5 +11,11 @@ installation via composer.
 ### Usage:
 Laravel
 
+generate sdk token
+
+```php
+  Agora::sdkToken();
+
+```
 ### Licence:
 MIT
