@@ -1,4 +1,4 @@
-# Get Mobile Provider
+# Generate Agora Server Side Token
 
 generate server side tokens for agora in laravel.
 ### installation:
