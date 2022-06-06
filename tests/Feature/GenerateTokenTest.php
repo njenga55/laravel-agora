@@ -6,8 +6,18 @@ use Njenga55\Agora\AgoraProvider;
 use Njenga55\Agora\Facades\Agora;
 use Orchestra\Testbench\TestCase;
 
+use function PHPUnit\Framework\assertStringStartsWith;
+
 class GenerateTokenTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        config(['agora.access_key' => 'somekeyvalue']);
+        config(['agora.secret_accessKey' => 'somekeyvalue']);
+        config(['agora.lifespan' => 10000]);
+    }
+
     /**
      * @param $app
      *
@@ -23,11 +33,41 @@ class GenerateTokenTest extends TestCase
     /**
      * @return void
      */
-    public function testCanGenerateToken()
+    public function testCanGenerateSdkToken()
     {
         $token = Agora::sdkToken();
-        // dd(new ());
+        assertStringStartsWith('NETLESSSDK', $token);
+    }
 
-        dd($token);
+    /**
+     * @return void
+     */
+    public function testCanGenerateRoomTokenToken()
+    {
+        $token = Agora::roomToken();
+        assertStringStartsWith('NETLESSROOM_', $token);
+
+        $token = Agora::setContext([
+            'role' => 'ADMINROLE',
+            'uuid' => 'some-uuid-value-here-especially-for-tasks-and-room'
+        ])->roomToken();
+
+        assertStringStartsWith('NETLESSROOM_', $token);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCanGenerateTaskTokenToken()
+    {
+        $token = Agora::taskToken();
+        assertStringStartsWith('NETLESSTASK_', $token);
+
+        $token = Agora::setContext([
+            'role' => 'ADMINROLE',
+            'uuid' => 'some-uuid-value-here-especially-for-tasks-and-room'
+        ])->taskToken();
+
+        assertStringStartsWith('NETLESSTASK_', $token);
     }
 }

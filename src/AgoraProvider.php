@@ -1,5 +1,12 @@
 <?php
 
+/**
+ ** DISCLAMER!
+ * I do not by any change imply that this file is 100% my work. Infact if you want to look at the raw file please visit
+ * https://github.com/netless-io/netless-token/blob/master/php/src/Netless/Token/Generate.php
+ * if by any chance a licence is added to the source please be kind to make PR to help us abid by it.
+ * Otherwise you are free to re-use/use this package for the greated good of humanity in anyway that the Almighty has empowered you.
+ */
 namespace Njenga55\Agora;
 
 date_default_timezone_set('UTC');
@@ -24,6 +31,26 @@ class AgoraProvider
                 'role' => AgoraProvider::ADMINROLE,
             ];
         }
+    }
+
+    /**
+     * Define context before generating token.
+     *
+     * @param array $context
+     *
+     * @return void
+     */
+    public function setContext(array $context)
+    {
+        $this->context = $context;
+
+        if (array_key_exists('role', $context)) {
+            $this->context = array_merge($this->context, [
+                'role' => constant('self::'. $context['role']),
+            ]);
+        }
+
+        return $this;
     }
 
     /**
@@ -68,7 +95,7 @@ class AgoraProvider
      */
     public function taskToken(): string
     {
-        return $this->createToken('NETLESSTASK_');
+        return $this->createToken('NETLESSTASK_')();
     }
 
     /**
